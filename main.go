@@ -28,7 +28,7 @@ func main() {
 		Reload(true)
 	app.RegisterView(tmpl)
 
-	app.StaticWeb("/public", "./web/public")
+	app.HandleDir("/public", "./web/public")
 
 	app.OnAnyErrorCode(func(ctx iris.Context) {
 		ctx.ViewData("Message", ctx.Values().
@@ -45,6 +45,7 @@ func main() {
 		return
 	}
 	repo := repositories.NewUserRepository(db)
+	//fmt.Println(repo)
 	userService := services.NewUserService(repo)
 
 	// "/users" based mvc application.
