@@ -5,13 +5,12 @@ package main
 import (
 	"time"
 
+	"github.com/kataras/iris"
 	"github.com/kataras/iris/_examples/mvc/login/datasource"
 	"github.com/kataras/iris/_examples/mvc/login/repositories"
 	"github.com/kataras/iris/_examples/mvc/login/services"
 	"github.com/kataras/iris/_examples/mvc/login/web/controllers"
 	"github.com/kataras/iris/_examples/mvc/login/web/middleware"
-
-	"github.com/kataras/iris"
 	"github.com/kataras/iris/mvc"
 	"github.com/kataras/iris/sessions"
 )
@@ -31,8 +30,8 @@ func main() {
 	app.HandleDir("/public", "./web/public")
 
 	app.OnAnyErrorCode(func(ctx iris.Context) {
-		ctx.ViewData("Message", ctx.Values().
-			GetStringDefault("message", "The page you're looking for doesn't exist"))
+		ctx.ViewData("Message",
+			ctx.Values().GetStringDefault("message", "The page you're looking for doesn't exist"))
 		ctx.View("shared/error.html")
 	})
 
@@ -44,7 +43,11 @@ func main() {
 		app.Logger().Fatalf("error while loading the users: %v", err)
 		return
 	}
+
+	// db 是map [int64]datamodels.User
+
 	repo := repositories.NewUserRepository(db)
+	//repo 是 repositories.userMemoryRepository 类型的引用
 	//fmt.Println(repo)
 	userService := services.NewUserService(repo)
 
